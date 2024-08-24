@@ -1,0 +1,1 @@
+<!-- goose postgres "postgres://username:pass@localhost:5432/natour" up -->
