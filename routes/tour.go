@@ -8,5 +8,6 @@ import (
 func tourRoute(router *chi.Mux, apiConfig *controller.APIConfig) {
 
 	router.Get("/tours", apiConfig.GetAllTours)
+	router.Post("/tours", apiConfig.CreateTour)
 
 }

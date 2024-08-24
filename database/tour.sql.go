@@ -8,9 +8,8 @@ package database
 import (
 	"context"
 	"database/sql"
-	"time"
 
-	"github.com/lib/pq"
+
 )
 
 const createTour = `-- name: CreateTour :one
@@ -25,25 +24,23 @@ INSERT INTO tours (
   price,
   summary,
   description,
-  imageCover,
-  startDates
+  imageCover
 )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-RETURNING id, name, slug, duration, maxgroupsize, difficulty, ratingaverage, ratingquantity, price, discount, summary, description, imagecover, createdat, startdates, secrettour
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+RETURNING id, name, slug, duration, maxgroupsize, difficulty, ratingaverage, ratingquantity, price, discount, summary, description, imagecover, createdat, secrettour
 `
 
 type CreateTourParams struct {
 	Name           string
-	Duration       sql.NullString
+	Duration       sql.NullFloat64
 	Maxgroupsize   int32
 	Difficulty     string
-	Ratingaverage  sql.NullString
+	Ratingaverage  sql.NullFloat64
 	Ratingquantity sql.NullInt32
 	Price          int32
 	Summary        string
 	Description    sql.NullString
 	Imagecover     sql.NullString
-	Startdates     []time.Time
 }
 
 func (q *Queries) CreateTour(ctx context.Context, arg CreateTourParams) (Tour, error) {
@@ -58,7 +55,6 @@ func (q *Queries) CreateTour(ctx context.Context, arg CreateTourParams) (Tour, e
 		arg.Summary,
 		arg.Description,
 		arg.Imagecover,
-		pq.Array(arg.Startdates),
 	)
 	var i Tour
 	err := row.Scan(
@@ -76,14 +72,13 @@ func (q *Queries) CreateTour(ctx context.Context, arg CreateTourParams) (Tour, e
 		&i.Description,
 		&i.Imagecover,
 		&i.Createdat,
-		pq.Array(&i.Startdates),
 		&i.Secrettour,
 	)
 	return i, err
 }
 
 const getAllTours = `-- name: GetAllTours :many
-SELECT id, name, slug, duration, maxgroupsize, difficulty, ratingaverage, ratingquantity, price, discount, summary, description, imagecover, createdat, startdates, secrettour FROM tours
+SELECT id, name, slug, duration, maxgroupsize, difficulty, ratingaverage, ratingquantity, price, discount, summary, description, imagecover, createdat, secrettour FROM tours
 `
 
 func (q *Queries) GetAllTours(ctx context.Context) ([]Tour, error) {
@@ -110,7 +105,6 @@ func (q *Queries) GetAllTours(ctx context.Context) ([]Tour, error) {
 			&i.Description,
 			&i.Imagecover,
 			&i.Createdat,
-			pq.Array(&i.Startdates),
 			&i.Secrettour,
 		); err != nil {
 			return nil, err

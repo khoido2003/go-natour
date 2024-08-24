@@ -9,23 +9,23 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
 )
 
 type Tour struct {
 	ID             uuid.UUID
 	Name           string
 	Slug           sql.NullString
-	Duration       sql.NullString
+	Duration       sql.NullFloat64
 	Maxgroupsize   int32
 	Difficulty     string
-	Ratingaverage  sql.NullString
+	Ratingaverage  sql.NullFloat64
 	Ratingquantity sql.NullInt32
 	Price          int32
-	Discount       sql.NullString
+	Discount       sql.NullFloat64
 	Summary        string
 	Description    sql.NullString
 	Imagecover     sql.NullString
 	Createdat      time.Time
-	Startdates     []time.Time
 	Secrettour     sql.NullBool
 }

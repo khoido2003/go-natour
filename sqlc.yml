@@ -1,10 +1,12 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "sql/queries"
     schema: "sql/schema"
+    queries: "sql/queries"
     gen:
       go:
         package: "database"
         out: "database"
-        
+        overrides:
+          - db_type: "numeric"
+            go_type: "sql.NullFloat64"
